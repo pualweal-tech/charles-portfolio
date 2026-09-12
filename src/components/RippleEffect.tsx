@@ -6,9 +6,9 @@ type Ripple = {
   born: number
 }
 
-const GAP_MS = 240
-const LIFE_MS = 1000
-const MAX = 3
+const GAP_MS = 520
+const LIFE_MS = 820
+const MAX = 1
 
 type RippleEffectProps = {
   enabled: boolean
@@ -50,25 +50,25 @@ export default function RippleEffect({ enabled }: RippleEffectProps) {
       for (const ripple of ripples.current) {
         const t = (now - ripple.born) / LIFE_MS
         const ease = 1 - (1 - t) * (1 - t)
-        const radius = 12 + ease * 90
+        const radius = 10 + ease * 56
         const fade = 1 - t
 
         const glow = ctx.createRadialGradient(
           ripple.x,
           ripple.y,
-          radius * 0.12,
+          radius * 0.18,
           ripple.x,
           ripple.y,
           radius,
         )
-        glow.addColorStop(0, `rgba(255, 252, 244, ${0.1 * fade})`)
+        glow.addColorStop(0, `rgba(255, 252, 244, ${0.035 * fade})`)
         glow.addColorStop(1, 'rgba(255, 255, 255, 0)')
         ctx.fillStyle = glow
         ctx.beginPath()
         ctx.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2)
         ctx.fill()
 
-        ctx.strokeStyle = `rgba(255, 250, 240, ${0.32 * fade})`
+        ctx.strokeStyle = `rgba(255, 250, 240, ${0.12 * fade})`
         ctx.lineWidth = 1
         ctx.beginPath()
         ctx.arc(ripple.x, ripple.y, radius * 0.82, 0, Math.PI * 2)

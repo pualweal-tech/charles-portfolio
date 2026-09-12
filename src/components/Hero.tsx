@@ -1,8 +1,84 @@
+import { useEffect, useRef } from 'react'
+
 type HeroProps = {
   onEnterGraphic: () => void
 }
 
 export default function Hero({ onEnterGraphic }: HeroProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    const wrap = wrapRef.current
+    if (!video || !wrap) return
+
+    video.muted = true
+    video.playsInline = true
+    video.pause()
+
+    const target = { current: 0 }
+    const hovering = { current: false }
+    const rafId = { current: 0 }
+
+    const tick = () => {
+      rafId.current = 0
+      if (!video.duration || !Number.isFinite(video.duration)) return
+      const ease = hovering.current ? 0.22 : 0.16
+      const next = video.currentTime + (target.current - video.currentTime) * ease
+      if (Math.abs(next - video.currentTime) > 0.001) {
+        video.currentTime = next
+      }
+      if (Math.abs(target.current - video.currentTime) > 0.012) {
+        rafId.current = window.requestAnimationFrame(tick)
+      } else {
+        video.currentTime = target.current
+      }
+    }
+
+    const queue = () => {
+      if (!rafId.current) rafId.current = window.requestAnimationFrame(tick)
+    }
+
+    const aimFromX = (clientX: number) => {
+      if (!video.duration) return
+      const rect = wrap.getBoundingClientRect()
+      const x = (clientX - rect.left) / Math.max(rect.width, 1)
+      const t = 1 - Math.min(1, Math.max(0, x))
+      target.current = t * video.duration
+      queue()
+    }
+
+    const onEnter = (event: PointerEvent) => {
+      hovering.current = true
+      aimFromX(event.clientX)
+    }
+
+    const onMove = (event: PointerEvent) => {
+      if (!hovering.current) return
+      aimFromX(event.clientX)
+    }
+
+    const onLeave = () => {
+      hovering.current = false
+      target.current = 0
+      queue()
+    }
+
+    wrap.addEventListener('pointerenter', onEnter)
+    wrap.addEventListener('pointermove', onMove)
+    wrap.addEventListener('pointerleave', onLeave)
+    wrap.addEventListener('pointercancel', onLeave)
+
+    return () => {
+      if (rafId.current) window.cancelAnimationFrame(rafId.current)
+      wrap.removeEventListener('pointerenter', onEnter)
+      wrap.removeEventListener('pointermove', onMove)
+      wrap.removeEventListener('pointerleave', onLeave)
+      wrap.removeEventListener('pointercancel', onLeave)
+    }
+  }, [])
+
   return (
     <section className="relative flex h-screen min-h-[640px] items-center px-5 sm:px-8 lg:px-12">
       <div className="relative z-20 max-w-[22rem] lg:max-w-[28rem]">
@@ -21,13 +97,23 @@ export default function Hero({ onEnterGraphic }: HeroProps) {
         </button>
       </div>
 
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-0 flex w-[min(72vw,820px)] items-end justify-end lg:items-center">
-        <img
-          src="/works/asset-001.png"
-          alt="保罗个人形象"
-          className="h-[78vh] max-h-[860px] w-auto object-contain object-bottom select-none lg:h-[86vh]"
-          fetchPriority="high"
-        />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 flex justify-end">
+        <div
+          ref={wrapRef}
+          className="pointer-events-auto w-[min(72vw,820px)]"
+        >
+          <video
+            ref={videoRef}
+            src="/portrait.mp4"
+            muted
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            controls={false}
+            aria-label="保罗个人形象"
+            className="ml-auto block h-[78vh] max-h-[860px] w-auto object-contain object-bottom select-none lg:h-[86vh]"
+          />
+        </div>
       </div>
     </section>
   )
