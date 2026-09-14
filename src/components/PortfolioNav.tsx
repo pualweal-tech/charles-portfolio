@@ -8,14 +8,17 @@ type PortfolioNavProps = {
 export default function PortfolioNav({ active, onChange }: PortfolioNavProps) {
   return (
     <aside className="pointer-events-none z-30 lg:pointer-events-auto lg:fixed lg:top-1/2 lg:right-8 lg:-translate-y-1/2 xl:right-12">
-      <div className="hidden w-[8.5rem] lg:block">
+      <div className="hidden w-[9.5rem] lg:block">
+        <p className="mb-3 pr-2 text-right font-en text-[10px] tracking-[0.28em] text-[var(--ink-dim)]">
+          ARCHIVE
+        </p>
         <p className="mb-4 pr-2 text-right text-[11px] tracking-[0.22em] text-[var(--ink-dim)]">
           平面作品
         </p>
         <div className="mb-5 ml-auto h-px w-10 bg-[var(--line)]" />
         <nav aria-label="作品板块">
           <ul>
-            {PORTFOLIO_SECTIONS.map((section) => (
+            {PORTFOLIO_SECTIONS.map((section, index) => (
               <li key={section.id}>
                 <button
                   type="button"
@@ -23,6 +26,9 @@ export default function PortfolioNav({ active, onChange }: PortfolioNavProps) {
                   data-active={section.id === active}
                   onClick={() => onChange(section.id)}
                 >
+                  <span className="nav-index">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                   <span>{section.label}</span>
                 </button>
               </li>

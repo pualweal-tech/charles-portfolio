@@ -1,8 +1,11 @@
 import { useCallback, useState } from 'react'
-import ComingSoon from './components/ComingSoon'
+import Cursor from './components/Cursor'
 import Header from './components/Header'
+import About from './pages/About'
+import Career from './pages/Career'
 import GraphicDesign from './pages/GraphicDesign'
 import Home from './pages/Home'
+import VibeCoding from './pages/VibeCoding'
 import type { View } from './types'
 
 export default function App() {
@@ -15,7 +18,10 @@ export default function App() {
   const goVibe = useCallback(() => setView('vibe'), [])
 
   return (
-    <main className="relative h-screen overflow-hidden bg-[var(--bg)]">
+    <main className="site-shell">
+      <div className="site-frame" aria-hidden="true" />
+      <div className="film-grain" aria-hidden="true" />
+      <Cursor />
       <Header
         view={view}
         onHome={goHome}
@@ -30,7 +36,12 @@ export default function App() {
         aria-hidden={view !== 'home'}
         inert={view !== 'home'}
       >
-        <Home active={view === 'home'} onEnterGraphic={goGraphic} />
+        <Home
+          active={view === 'home'}
+          onEnterGraphic={goGraphic}
+          onEnterAbout={goAbout}
+          onEnterVibe={goVibe}
+        />
       </section>
       <section
         className="space-graphic"
@@ -46,7 +57,7 @@ export default function App() {
         aria-hidden={view !== 'about'}
         inert={view !== 'about'}
       >
-        <ComingSoon title="个人简介" />
+        <About enabled={view === 'about'} />
       </section>
       <section
         className="space-graphic"
@@ -54,7 +65,7 @@ export default function App() {
         aria-hidden={view !== 'career'}
         inert={view !== 'career'}
       >
-        <ComingSoon title="工作经历" />
+        <Career enabled={view === 'career'} />
       </section>
       <section
         className="space-graphic"
@@ -62,7 +73,7 @@ export default function App() {
         aria-hidden={view !== 'vibe'}
         inert={view !== 'vibe'}
       >
-        <ComingSoon title="vibe coding案例" />
+        <VibeCoding enabled={view === 'vibe'} />
       </section>
     </main>
   )

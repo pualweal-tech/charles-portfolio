@@ -79,8 +79,12 @@ function WorkBoard({
     <div className="relative mx-auto w-full max-w-[1283px]">
       {!ready && (
         <div className="flex min-h-[70vh] items-center justify-center">
-          <p className="font-en text-[12px] tracking-[0.42em] text-[var(--ink-mute)]">
-            LOADING
+          <p className="loading-mark" aria-live="polite">
+            {Array.from('LOADING').map((letter, index) => (
+              <span key={index} style={{ animationDelay: `${index * 80}ms` }}>
+                {letter}
+              </span>
+            ))}
           </p>
         </div>
       )}

@@ -53,7 +53,7 @@ export default function GraphicDesign({ enabled }: GraphicDesignProps) {
     <div className="relative h-full">
       <div
         ref={scrollerRef}
-        className="section-lock h-full overflow-y-auto pt-16 pb-24 lg:pr-36 lg:pb-8"
+        className="section-lock h-full overflow-y-auto pt-20 pb-24 lg:pr-40 lg:pb-8"
       >
         <ProjectContent key={active} section={active} />
       </div>

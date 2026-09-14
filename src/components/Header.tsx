@@ -18,14 +18,14 @@ export default function Header({
   onVibe,
 }: HeaderProps) {
   const links = [
-    { id: 'graphic' as const, label: '平面作品', onClick: onGraphic },
-    { id: 'about' as const, label: '个人简介', onClick: onAbout },
-    { id: 'career' as const, label: '工作经历', onClick: onCareer },
-    { id: 'vibe' as const, label: 'vibe coding案例', onClick: onVibe },
+    { id: 'graphic' as const, index: '01', label: '平面作品', onClick: onGraphic },
+    { id: 'about' as const, index: '02', label: '个人简介', onClick: onAbout },
+    { id: 'career' as const, index: '03', label: '工作经历', onClick: onCareer },
+    { id: 'vibe' as const, index: '04', label: 'vibe coding', onClick: onVibe },
   ]
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 pt-5 sm:px-8 sm:pt-6 lg:px-10">
+    <header className="site-header">
       {view === 'home' ? (
         <button
           type="button"
@@ -53,7 +53,7 @@ export default function Header({
         </button>
       )}
 
-      <nav className="pointer-events-auto flex max-w-[70%] flex-wrap items-center justify-end gap-x-5 gap-y-2 text-[11px] sm:gap-x-8 sm:text-[12px] lg:gap-x-10">
+      <nav className="site-nav" aria-label="主导航">
         {links.map((item) => (
           <button
             key={item.id}
@@ -62,17 +62,10 @@ export default function Header({
             data-active={view === item.id}
             onClick={item.onClick}
           >
-            {item.label}
+            <span className="header-index">{item.index}</span>
+            <span>{item.label}</span>
           </button>
         ))}
-        <button
-          type="button"
-          className="header-arrow"
-          aria-label="进入平面作品"
-          onClick={onGraphic}
-        >
-          →
-        </button>
       </nav>
     </header>
   )
