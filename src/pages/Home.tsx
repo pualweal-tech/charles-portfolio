@@ -19,7 +19,6 @@ export default function Home({
       <RippleEffect enabled={active} />
       <div className="relative z-20 h-full">
         <Hero
-          active={active}
           onEnterGraphic={onEnterGraphic}
           onEnterAbout={onEnterAbout}
           onEnterVibe={onEnterVibe}
